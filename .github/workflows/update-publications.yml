@@ -11,17 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Check token is set
-        env:
-          ADS_TOKEN: ${{ secrets.ADS_TOKEN }}
-        run: |
-          if [ -z "$ADS_TOKEN" ]; then
-            echo "ERROR: ADS_TOKEN secret is empty or not set"
-            exit 1
-          else
-            echo "ADS_TOKEN is set (length: ${#ADS_TOKEN})"
-          fi
-
       - name: Fetch publications from ADS
         env:
           ADS_TOKEN: ${{ secrets.ADS_TOKEN }}

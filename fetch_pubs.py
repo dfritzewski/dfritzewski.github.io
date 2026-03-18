@@ -18,6 +18,9 @@ import urllib.parse
 req = urllib.request.Request(url, headers={'Authorization': f'Bearer {TOKEN}'})
 with urllib.request.urlopen(req) as r:
     docs = json.loads(r.read())['response']['docs']
+    
+# Filter to articles only — excludes VizieR catalogues, conference proceedings data releases etc.
+docs = [d for d in docs if 'NONARTICLE' not in d.get('property', [])]
 
 # Inject into index.html between the two marker comments
 pub_json = json.dumps(docs, ensure_ascii=False)
