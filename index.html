@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dario Fritzewski — Postdoctoral Researcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════
+       COLOUR TOKENS
+    ══════════════════════════════════════════ */
+    :root {
+      /* Light mode */
+      --bg:          #eef3fa;        /* cool blue-white */
+      --bg-2:        #e4ecf7;
+      --surface:     #ffffff;
+      --surface-2:   #f0f5fc;
+      --ink:         #0d1b2e;        /* near-black navy */
+      --ink-mid:     #2a3f5f;
+      --ink-muted:   #607090;
+      --accent:      #c8832a;        /* warm gold */
+      --accent-hi:   #e09a40;        /* brighter gold hover */
+      --accent-blue: #2563a8;        /* link blue */
+      --accent-lt:   #fdf3e3;        /* gold tint surface */
+      --border:      #ccd8ec;
+      --border-lt:   #dde6f4;
+      --nav-bg:      rgba(238,243,250,0.92);
+      --star-col:    rgba(37,99,168,VAL);
+      --star-warm:   rgba(200,131,42,VAL);
+      --radius:      10px;
+      --max-w:       900px;
+      --nav-h:       62px;
+      --serif:       'Crimson Pro', Georgia, serif;
+      --sans:        'Space Grotesk', sans-serif;
+      --shadow-sm:   0 1px 8px rgba(13,27,46,0.08);
+      --shadow:      0 4px 28px rgba(13,27,46,0.12);
+      --transition:  0.28s ease;
+    }
+
+    [data-theme="dark"] {
+      --bg:          #080e1a;        /* deep space navy */
+      --bg-2:        #0d1527;
+      --surface:     #111d33;
+      --surface-2:   #162040;
+      --ink:         #e8edf8;
+      --ink-mid:     #b0bdd8;
+      --ink-muted:   #6a7fa8;
+      --accent:      #d4922e;
+      --accent-hi:   #f0b040;
+      --accent-blue: #5b9be8;
+      --accent-lt:   #1e2a10;
+      --border:      #1e2e4a;
+      --border-lt:   #162040;
+      --nav-bg:      rgba(8,14,26,0.93);
+      --star-col:    rgba(91,155,232,VAL);
+      --star-warm:   rgba(212,146,46,VAL);
+      --shadow-sm:   0 1px 8px rgba(0,0,0,0.3);
+      --shadow:      0 4px 28px rgba(0,0,0,0.45);
+    }
+
+    /* ══════════════════════════════════════════
+       BASE
+    ══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--transition), color var(--transition);
+    }
+    a { color: var(--accent-blue); text-decoration: none; transition: color 0.2s; }
+    a:hover { text-decoration: underline; }
+
+    /* ══════════════════════════════════════════
+       STARFIELD
+    ══════════════════════════════════════════ */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ══════════════════════════════════════════
+       NAV
+    ══════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .nav-star { color: var(--accent); font-size: 0.85rem; line-height: 1;}
+    .nav-right { display: flex; align-items: center; gap: 2rem; }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.77rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+    /* Dark mode toggle */
+    .theme-toggle {
+      width: 36px; height: 20px;
+      background: var(--border);
+      border-radius: 99px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.25s;
+    }
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      transition: transform 0.25s, background 0.25s;
+    }
+    [data-theme="dark"] .theme-toggle { background: var(--border); }
+    [data-theme="dark"] .theme-toggle::after { transform: translateX(16px); }
+    .toggle-label {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .toggle-wrap { display: flex; align-items: center; gap: 0.5rem; }
+
+    /* ══════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════ */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 2.5rem);
+    }
+    section {
+      padding: 5rem 0 4rem;
+      border-bottom: 1px solid var(--border-lt);
+      transition: border-color var(--transition);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+
+    /* ══════════════════════════════════════════
+       ABOUT
+    ══════════════════════════════════════════ */
+    #about { padding-top: calc(var(--nav-h) + 4.5rem); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 190px;
+      gap: 3rem;
+      align-items: start;
+    }
+    .about-text h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.1rem);
+      font-weight: 600;
+      line-height: 1.12;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+    .about-role {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      margin-bottom: 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.7rem;
+      align-items: center;
+    }
+    .about-role .sep { color: var(--border); }
+    .about-role .inst { color: var(--accent-blue); font-weight: 500; }
+    .about-text p {
+      font-family: var(--serif);
+      font-size: 1.12rem;
+      color: var(--ink-mid);
+      max-width: 580px;
+      margin-bottom: 0.9rem;
+      line-height: 1.78;
+    }
+    .about-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.8rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .pill svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .pill-gold { background: var(--accent); color: #fff; }
+    .pill-gold:hover { background: var(--accent-hi); text-decoration: none; color: #fff; }
+    .pill-blue { background: var(--accent-blue); color: #fff; }
+    .pill-blue:hover { opacity: 0.88; text-decoration: none; color: #fff; }
+    .pill-outline {
+      border: 1.5px solid var(--border);
+      color: var(--ink-muted);
+      background: var(--surface);
+    }
+    .pill-outline:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+    /* Photo */
+    .photo-wrap {
+      width: 190px; height: 190px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      background: var(--surface-2);
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .photo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--accent-blue);
+      opacity: 0.45;
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 1rem;
+    }
+    .photo-placeholder svg { width: 40px; height: 40px; }
+
+    /* ══════════════════════════════════════════
+       RESEARCH
+    ══════════════════════════════════════════ */
+    .research-intro {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      color: var(--ink-mid);
+      max-width: 640px;
+      margin-bottom: 2rem;
+      line-height: 1.78;
+    }
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+    .research-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: box-shadow var(--transition), transform var(--transition),
+                  border-color var(--transition), background var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .research-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      opacity: 0;
+      transition: opacity 0.22s;
+    }
+    .research-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-3px);
+      border-color: transparent;
+    }
+    .research-card:hover::after { opacity: 1; }
+    .card-glyph { font-size: 1.6rem; margin-bottom: 0.9rem; line-height: 1; }
+    .research-card h3 {
+      font-family: var(--serif);
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .research-card p { font-size: 0.83rem; color: var(--ink-muted); line-height: 1.65; }
+
+    /* ══════════════════════════════════════════
+       PUBLICATIONS
+    ══════════════════════════════════════════ */
+    .ads-config {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .ads-config label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      flex: 1;
+      min-width: 170px;
+    }
+    .ads-config input {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      padding: 0.48rem 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, background var(--transition), color var(--transition);
+    }
+    .ads-config input:focus { border-color: var(--accent-blue); }
+    .ads-config input::placeholder { color: var(--ink-muted); opacity: 0.5; }
+    .btn-fetch {
+      padding: 0.5rem 1.25rem;
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+    .btn-fetch:hover { opacity: 0.85; }
+    .btn-fetch svg { width: 14px; height: 14px; }
+
+    .pub-status {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      margin-bottom: 1.2rem;
+      min-height: 1.4em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .pub-status.loading { color: var(--accent-blue); }
+    .pub-status.error   { color: #d0392b; }
+    .pub-status.ok      { color: #2a8a50; }
+    [data-theme="dark"] .pub-status.ok { color: #4cba7a; }
+
+    .spinner {
+      width: 13px; height: 13px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .pub-list { display: flex; flex-direction: column; gap: 1rem; }
+
+    .pub-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.4rem 1rem;
+      align-items: start;
+      transition: box-shadow 0.2s, background var(--transition), border-color var(--transition);
+      animation: fadeUp 0.32s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .pub-item:hover { box-shadow: var(--shadow-sm); }
+
+    .pub-year {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
+    }
+    .pub-title {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 0.3rem;
+    }
+    .pub-authors { font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 0.2rem; }
+    .pub-authors strong { color: var(--ink-mid); font-weight: 500; }
+    .pub-journal { font-size: 0.8rem; color: var(--ink-muted); font-style: italic; }
+    .pub-journal a { color: var(--ink-muted); }
+    .pub-journal a:hover { color: var(--accent-blue); }
+
+    .pub-badges { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end; }
+    .badge {
+      display: inline-block;
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-article  { background: #ddeaf8; color: #1a4a8a; }
+    .badge-preprint { background: #fdefd8; color: #8a5010; }
+    [data-theme="dark"] .badge-article  { background: #162440; color: #80b0e8; }
+    [data-theme="dark"] .badge-preprint { background: #2a1e0a; color: #d4922e; }
+
+    .pub-links { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; margin-top: 0.15rem; }
+    .pub-link { font-size: 0.75rem; font-weight: 500; color: var(--accent-blue); }
+    .pub-link:hover { text-decoration: underline; }
+
+    .pub-placeholder {
+      background: var(--surface-2);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .pub-placeholder svg {
+      width: 30px; height: 30px;
+      color: var(--accent);
+      opacity: 0.5;
+      margin: 0 auto 0.8rem;
+      display: block;
+    }
+
+    /* ══════════════════════════════════════════
+       CONTACT
+    ══════════════════════════════════════════ */
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .contact-blurb {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      color: var(--ink-mid);
+      margin-bottom: 1.8rem;
+      line-height: 1.78;
+    }
+    .contact-items { display: flex; flex-direction: column; gap: 0.9rem; }
+    .contact-item {
+      display: flex; align-items: flex-start;
+      gap: 0.7rem; font-size: 0.88rem; color: var(--ink-muted);
+    }
+    .contact-item svg { width: 16px; height: 16px; color: var(--accent); flex-shrink: 0; margin-top: 0.2em; }
+    .contact-item a { color: var(--ink-mid); }
+    .contact-item a:hover { color: var(--accent-blue); }
+
+    .social-links { display: flex; flex-direction: column; gap: 0.7rem; }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-mid);
+      transition: all 0.2s, background var(--transition);
+    }
+    .social-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .social-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+    .soc-label { flex: 1; }
+    .soc-arrow { font-size: 0.75rem; color: var(--border); transition: color 0.2s; }
+    .social-link:hover .soc-arrow { color: var(--accent); }
+    .ads-col { color: var(--accent); }
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    footer {
+      position: relative; z-index: 1;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 2rem clamp(1.5rem, 5vw, 2.5rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      border-top: 1px solid var(--border-lt);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .photo-wrap { width: 140px; height: 140px; }
+      .contact-wrap { grid-template-columns: 1fr; }
+      .nav-links { gap: 1.1rem; }
+      .toggle-label { display: none; }
+      .pub-item { grid-template-columns: 1fr; }
+      .pub-badges { flex-direction: row; flex-wrap: wrap; }
+      .ads-config { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<!-- ── NAV ───────────────────────────────────────── -->
+<nav>
+  <div class="nav-left">
+    <span class="nav-star">✦</span>
+    Dario Fritzewski
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="toggle-wrap">
+      <span class="toggle-label" id="toggle-label">Light</span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ── ABOUT ─────────────────────────────────────── -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text">
+        <h1>Dario Fritzewski</h1>
+        <div class="about-role">
+          <span>Postdoctoral Researcher</span>
+          <span class="sep">·</span>
+          <span class="inst">Institute of Astronomy, KU Leuven, Belgium</span>
+        </div>
+        <p>
+          I am a postdoctoral researcher in stellar astrophysics
+          at KU Leuven, working in the group of Conny Aerts.
+        </p>
+        <p>
+          My research focuses on open clusters as probes for stellar physics, using TESS, <i>Gaia</i>, and soon <a href="https://fys.kuleuven.be/ster/research-projects/plato-cs/work_packages#WP168000">PLATO</a> which will deliver high-precision, long-term light curves for many open cluster members.
+        </p>
+        <div class="contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            <a href="mailto:dario.fritzewski@kuleuven.be">dario.fritzewski@kuleuven.be</a>
+        </div>
+        <div class="about-links">
+          <!-- EDIT: update hrefs -->
+          <!--<a class="pill pill-gold" href="YOUR_CV.pdf" target="_blank"> -->
+            <!--<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/></svg> -->
+            <!-- Download CV -->
+          <!--</a> --> 
+          <a class="pill pill-blue" href="https://ui.adsabs.harvard.edu/search/q=author%3A%22Fritzewski%22&sort=date" target="_blank">
+            ADS Profile
+          </a>
+          <a class="pill pill-outline" href="https://orcid.org/0000-0002-2275-3877" target="_blank">ORCID</a>
+          <!--<a class="pill pill-outline" href="https://github.com/dfritzewski" target="_blank">GitHub</a>--> 
+        </div>
+      </div>
+      <div class="photo-wrap">
+        <img src="image.jpg" alt="Dario Fritzewski" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RESEARCH ───────────────────────────────────── -->
+  <section id="research">
+    <p class="section-label">Research</p>
+
+    <p class="research-intro">
+      My work addresses fundamental questions about stellar evolution using
+      stars in open clusters as natural laboratories. Below are the main threads of my current research.
+    </p>
+
+    <div class="research-grid">
+      <div class="research-card">
+        <div class="card-glyph">🌌</div>
+        <h3>Ensemble Asteroseismology of early-type stars</h3>
+        <p>Asteroseismology probes the stellar interior through the effect of internal waves at the surface. Combining many stars in populations with asteroseismology gives us insights into the distributions of internal stellar properties.</p>
+      </div>
+      <div class="research-card">
+        <div class="card-glyph">⭐</div>
+        <h3>Rotation and Activity of cool stars</h3>
+        <p>Young cool stars show a wide variety of rotation periods. Connecting rotation and activity on a star-by-star basis in open clusters allows to better understand how magnetic breaking evolves in young stars.</p>
+      </div>
+      <div class="research-card">
+        <div class="card-glyph">⏳</div>
+        <h3>Stellar ages</h3>
+        <p>Measuring stellar ages accurately is not simple. My research focuses on combining age-determination methods such as gyrochronology, isochrone-fitting, and asteroseismology.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PUBLICATIONS ───────────────────────────────── -->
+  <section id="publications">
+    <p class="section-label">Publications</p>
+
+    <!-- PUB_DATA_START --><!-- PUB_DATA_END -->
+    
+  </section>
+
+  <!-- ── CONTACT ────────────────────────────────────── -->
+  <section id="contact">
+    <p class="section-label">Contact</p>
+    <div class="contact-wrap">
+      <div>
+        <div class="contact-items">
+          <div class="contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+            <a href="mailto:dario.fritzewski@kuleuven.be">dario.fritzewski@kuleuven.be</a>
+          </div>
+        </div>
+      </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>© 2026 Dario Fritzewski</span>
+  <span>Last updated: March 2026</span>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════
+   DARK MODE TOGGLE — persists via localStorage
+══════════════════════════════════════════════ */
+const root   = document.documentElement;
+const toggle = document.getElementById('theme-toggle');
+const label  = document.getElementById('toggle-label');
+
+function applyTheme(theme) {
+  root.setAttribute('data-theme', theme);
+  label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+  try { localStorage.setItem('theme', theme); } catch(e) {}
+}
+
+// Respect OS preference on first visit
+const saved = (() => { try { return localStorage.getItem('theme'); } catch(e) { return null; } })();
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(saved || (prefersDark ? 'dark' : 'light'));
+
+toggle.addEventListener('click', () => {
+  applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+/* ══════════════════════════════════════════════
+   OPEN CLUSTER STARFIELD
+   ── King-profile cluster (off-centre) + sparse field
+   ── Stellar colour sequence: O/B blue-white → K/M amber
+   ── Adapts opacity & colour to light/dark theme
+══════════════════════════════════════════════ */
+(function () {
+  const canvas = document.getElementById('starfield');
+  const ctx    = canvas.getContext('2d');
+  let stars    = [];
+
+  // Cluster centre: upper-right quadrant, partly off-screen
+  // Values are fractions of canvas size, set once on first seed
+  let cx, cy;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  // Gaussian random via Box-Muller
+  function gauss() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+
+  // King profile: draw radius from distribution ~ r / (1 + (r/r_c)^2)
+  // We sample via rejection from a disc and weight by King density
+  function kingRadius(rc, rt) {
+    let r;
+    const maxD = 1 / (1 + 0);   // density at r=0 = 1
+    for (let i = 0; i < 200; i++) {
+      r = Math.random() * rt;
+      const density = 1 / (1 + (r / rc) ** 2) - 1 / (1 + (rt / rc) ** 2);
+      if (Math.random() < density / maxD) return r;
+    }
+    return rt * Math.random();
+  }
+
+  function seed() {
+    stars = [];
+    // Cluster centre: ~70–85% across, ~10–30% down — upper-right, partly cropped
+    cx = canvas.width  * (0.70 + Math.random() * 0.20);
+    cy = canvas.height * (0.08 + Math.random() * 0.22);
+
+    const W  = canvas.width;
+    const H  = canvas.height;
+    const rc = Math.min(W, H) * 0.10;   // King core radius
+    const rt = Math.min(W, H) * 0.52;   // King tidal radius
+
+    // ── Cluster members ──────────────────────────────
+    const nCluster = 420;
+    for (let i = 0; i < nCluster; i++) {
+      const r     = kingRadius(rc, rt);
+      const angle = Math.random() * Math.PI * 2;
+      // Slight ellipticity (open clusters aren't perfectly round)
+      const xOff  = r * Math.cos(angle) * (0.85 + Math.random() * 0.30);
+      const yOff  = r * Math.sin(angle) * (0.85 + Math.random() * 0.30);
+
+      // Stellar mass / brightness: Salpeter-like — many faint, few bright
+      const mass  = Math.random() ** 2.35;   // IMF slope ~ -2.35
+      const bright = mass;
+
+      // Stellar colour along main sequence
+      // High mass → blue-white (O/B), low mass → amber/orange (K/M)
+      const colT  = Math.random();           // independent colour scatter
+      let starType;
+      if (colT < 0.05)       starType = 'ob';   // rare O/B blue giants
+      else if (colT < 0.25)  starType = 'a';    // A/F white-blue
+      else if (colT < 0.65)  starType = 'g';    // G yellow-white (like Sun)
+      else                   starType = 'km';   // K/M orange-red
+
+      // Radius: core stars slightly bigger on average (mass segregation)
+      const isCoreRegion = r < rc * 1.5;
+      const baseR = isCoreRegion
+        ? 0.4 + bright * 2.2
+        : 0.25 + bright * 1.6;
+
+      stars.push({
+        x:      cx + xOff,
+        y:      cy + yOff,
+        r:      baseR + Math.random() * 0.4,
+        a:      0.35 + bright * 0.65,
+        speed:  Math.random() * 0.010 + 0.002,
+        phase:  Math.random() * Math.PI * 2,
+        type:   starType,
+        cluster: true,
+      });
+    }
+
+    // ── Background field stars — full frame ──────────
+    // One star per ~1500px² gives a convincingly populated sky
+    const nField = Math.floor((W * H) / 1500);
+    for (let i = 0; i < nField; i++) {
+      const tier = Math.random();
+      const colRoll = Math.random();
+      const fType = colRoll < 0.04 ? 'ob'
+                  : colRoll < 0.18 ? 'a'
+                  : colRoll < 0.55 ? 'g'
+                  : 'km';
+      stars.push({
+        x:      Math.random() * W,
+        y:      Math.random() * H,
+        r:      tier < 0.72 ? Math.random() * 0.55 + 0.12
+                : tier < 0.92 ? Math.random() * 0.75 + 0.45
+                : Math.random() * 0.55 + 1.0,
+        a:      Math.random() * 1.6 + 0.8,
+        speed:  Math.random() * 0.008 + 0.002,
+        phase:  Math.random() * Math.PI * 2,
+        type:   fType,
+        cluster: false,
+      });
+    }
+
+    // Shuffle so draw order is mixed (avoids z-layer artefacts)
+    for (let i = stars.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [stars[i], stars[j]] = [stars[j], stars[i]];
+    }
+  }
+
+  // Colour tables per stellar type, for light and dark themes
+  const COLOURS = {
+    ob: { dark: [180, 210, 255], light: [80, 130, 220] },
+    a:  { dark: [220, 235, 255], light: [100, 150, 230] },
+    g:  { dark: [200, 215, 180], light: [60,  100, 180] },
+    km: { dark: [255, 175,  80], light: [190, 110,  30] },
+  };
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    t += 0.007;
+    const dark = root.getAttribute('data-theme') === 'dark';
+
+    for (const s of stars) {
+      const twinkle = 0.60 + 0.40 * Math.sin(t * s.speed * 60 + s.phase);
+      // Cluster members brighter in dark mode, still visible in light
+      const baseA = dark
+        ? (s.cluster ? 1.00 : 0.65)
+        : (s.cluster ? 0.72 : 0.28);
+      const alpha = baseA * s.a * twinkle;
+
+      const [r, g, b] = COLOURS[s.type][dark ? 'dark' : 'light'];
+
+      // Brightest cluster stars get a soft diffraction glow
+      if (s.cluster && s.r > 1.4) {
+        const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3.5);
+        grd.addColorStop(0,   `rgba(${r},${g},${b},${alpha})`);
+        grd.addColorStop(0.4, `rgba(${r},${g},${b},${alpha * 0.25})`);
+        grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+      }
+
+      // Star disc
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${Math.min(alpha * 1.1, 1)})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize(); seed(); draw();
+  window.addEventListener('resize', () => { resize(); seed(); });
+})();
+
+const MY_SURNAME = 'Fritzewski'; 
+
+function setStatus(html, cls = '') {
+  const el = document.getElementById('pub-status');
+  el.className = 'pub-status ' + cls;
+  el.innerHTML = html;
+}
+
+// Load pre-fetched publications on page load
+(function () {
+  if (window.__PUB_DATA__ && window.__PUB_DATA__.length) {
+    renderPubs(window.__PUB_DATA__);
+    setStatus(`✓ ${window.__PUB_DATA__.length} publications`, 'ok');
+  } else {
+    setStatus('No publication data found.', 'error');
+  }
+})();
+
+function renderPubs(docs) {
+  const list = document.getElementById('pub-list');
+  if (!docs.length) {
+    list.innerHTML = '<div class="pub-placeholder">No papers found — try adjusting the author query.</div>';
+    return;
+  }
+  list.innerHTML = docs.map((d, i) => {
+    const title   = d.title?.[0] || 'Untitled';
+    const year    = d.year   || '—';
+    const authors = fmtAuthors(d.author || []);
+    const journal = d.pub    || '';
+    const vol     = d.volume    ? `, ${d.volume}`   : '';
+    const page    = d.page?.[0] ? `, ${d.page[0]}` : '';
+    const doi     = d.doi?.[0]  || '';
+    const bibcode = d.bibcode   || '';
+
+    const props      = d.property || [];
+    const arxivId    = (d.identifier || []).find(id => id.startsWith('arXiv:'));
+    // REFEREED is the most reliable ADS signal for published journal articles
+    const isRefereed = props.includes('REFEREED');
+    const isPreprint = !isRefereed;
+
+    const badge    = isPreprint
+      ? '<span class="badge badge-preprint">Preprint</span>'
+      : '<span class="badge badge-article">Article</span>';
+
+    const adsLink  = bibcode
+      ? `<a class="pub-link" href="https://ui.adsabs.harvard.edu/abs/${encodeURIComponent(bibcode)}" target="_blank">ADS ↗</a>` : '';
+    const arxivLink = arxivId
+      ? `<a class="pub-link" href="https://arxiv.org/abs/${arxivId.replace('arXiv:', '')}" target="_blank">arXiv ↗</a>` : '';
+    const doiLink  = doi
+      ? `<a class="pub-link" href="https://doi.org/${esc(doi)}" target="_blank">DOI ↗</a>` : '';
+
+    const journalLine = journal
+      ? `<div class="pub-journal">${esc(journal)}${esc(vol)}${esc(page)}${doi
+          ? ` · <a href="https://doi.org/${esc(doi)}" target="_blank">${esc(doi)}</a>` : ''}</div>` : '';
+
+    return `<div class="pub-item" style="animation-delay:${Math.min(i * 0.035, 0.7)}s">
+      <div class="pub-main">
+        <div class="pub-year">${esc(year)}</div>
+        <div class="pub-title">${esc(title)}</div>
+        <div class="pub-authors">${authors}</div>
+        ${journalLine}
+      </div>
+      <div class="pub-badges">
+        ${badge}
+        <div class="pub-links">${adsLink}${arxivLink}${doiLink}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function fmtAuthors(authors) {
+  const surname = MY_SURNAME.toLowerCase();
+  const MAX     = 8;
+  const shown   = authors.slice(0, MAX).map(a => {
+    const e = esc(a);
+    return a.toLowerCase().startsWith(surname) ? `<strong>${e}</strong>` : e;
+    });
+  return shown.join(', ') + (authors.length > MAX ? ' <em>et al.</em>' : '');
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+</script>
+
+</body>
+</html>
